@@ -58,6 +58,8 @@ This lab has **no model, shell, file write, browser automation, persistence, ide
 
 Read-after-write verification checks the observed state of the demo adapter. It is **not** an independent external oracle and must not be confused with real-world effects.
 
+**Architecture context:** [Sanitized governed-execution diagram](https://github.com/Ozzurac/ncma-engineering/blob/main/architecture/governed-execution.md). This repository deliberately demonstrates a reduced local model, not the private gateway, confirmation transport or actual operational authority.
+
 ## Why it exists
 
 An LLM can generate the correct-looking call while selecting the wrong target, repeating a mutating request or reporting success without observing it. This example creates a small, testable boundary that makes those failures visible.
