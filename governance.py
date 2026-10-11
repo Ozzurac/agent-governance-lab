@@ -89,7 +89,7 @@ class Controller:
             1 <= len(proposal.request_id) <= 80
         ) or proposal.request_id != proposal.request_id.strip():
             return "INVALID_REQUEST_ID"
-        if proposal.capability not in cls._SCHEMAS:
+        if not isinstance(proposal.capability, str) or proposal.capability not in cls._SCHEMAS:
             return "UNKNOWN_CAPABILITY"
         if not isinstance(proposal.arguments, dict):
             return "INVALID_ARGUMENTS"
@@ -151,6 +151,8 @@ class Controller:
         """
         if not isinstance(approved, bool):
             return Outcome("DENIED", "", reason="INVALID_APPROVAL_TYPE")
+        if not isinstance(confirmation_id, str) or not confirmation_id:
+            return Outcome("DENIED", "", reason="INVALID_CONFIRMATION_ID")
         pending = self._pending.pop(confirmation_id, None)
         if pending is None:
             return Outcome("DENIED", "", reason="UNKNOWN_OR_CONSUMED_CONFIRMATION")
