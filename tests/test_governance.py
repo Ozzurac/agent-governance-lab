@@ -155,5 +155,20 @@ class GovernanceTests(unittest.TestCase):
         self.assertEqual(result.reason, "VALUE_TOO_LONG")
 
 
+    def test_unhashable_capability_is_denied(self) -> None:
+        result = self.controller.propose(
+            Proposal("bad-type-1", ["notes.write"], {"key": "demo", "value": "x"})
+        )
+        self.assertEqual(result.status, "DENIED")
+        self.assertEqual(result.reason, "UNKNOWN_CAPABILITY")
+
+    def test_unhashable_confirmation_id_is_denied_without_consuming(self) -> None:
+        pending = self.controller.propose(proposed_write())
+        result = self.controller.confirm(["invalid"], approved=True)
+        self.assertEqual(result.status, "DENIED")
+        self.assertEqual(result.reason, "INVALID_CONFIRMATION_ID")
+        self.assertEqual(self.controller.pending_count, 1)
+        self.assertEqual(self.store.write_count, 0)
+
 if __name__ == "__main__":
     unittest.main()
